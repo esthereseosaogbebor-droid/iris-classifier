@@ -1,5 +1,6 @@
 import os
-
+from sklearn.metrics import ConfusionMatrixDisplay
+import joblib
 from sklearn.datasets import load_iris
 iris = load_iris()
 X = iris.data   # shape (150, 4)
@@ -16,14 +17,36 @@ print("True labels:", y_test[:5])
 from sklearn.metrics import accuracy_score, confusion_matrix
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+import os
+import joblib
+
+# Create confusion matrix
 cm = confusion_matrix(y_test, y_pred)
-labels = iris.target_names.tolist() # ['setosa', 'versicolor', 'virginica']
+
+# Labels
+labels = iris.target_names.tolist()  # ['setosa', 'versicolor', 'virginica']
+
+# Display
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
-out_dir ="output"
+
+# Plot and get figure
+fig, ax = plt.subplots()
+disp.plot(ax=ax)
+
+# Save directory
+out_dir = "output"
 os.makedirs(out_dir, exist_ok=True)
+
+# Save confusion matrix image
 out_path = os.path.join(out_dir, "confusion_matrix.png")
-fig .savefig(out_path, bbox_inches='tight', dpi=300)
+fig.savefig(out_path, bbox_inches='tight', dpi=300)
+
 print(f"Confusion matrix saved to: {out_path}")
+
+# Save model
 model_path = os.path.join(out_dir, "decision_tree_iris.pkl")
 joblib.dump(model, model_path, compress=3)
-print(f"trained model saved to: {model_path}")
+
+print(f"Trained model saved to: {model_path}")
